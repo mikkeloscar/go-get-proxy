@@ -30,13 +30,13 @@ build.linux: build/linux/$(BINARY)
 build.osx: build/osx/$(BINARY)
 
 build/$(BINARY): $(SOURCES)
-	CGO_ENABLED=0 go build -i -o build/$(BINARY) $(BUILD_FLAGS) -ldflags "$(LDFLAGS)" .
+	CGO_ENABLED=0 go build -o build/$(BINARY) $(BUILD_FLAGS) -ldflags "$(LDFLAGS)" .
 
 build/linux/$(BINARY): $(SOURCES)
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -i $(BUILD_FLAGS) -o build/linux/$(BINARY) -ldflags "$(LDFLAGS)" .
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build $(BUILD_FLAGS) -o build/linux/$(BINARY) -ldflags "$(LDFLAGS)" .
 
 build/osx/$(BINARY): $(SOURCES)
-	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -i $(BUILD_FLAGS) -o build/osx/$(BINARY) -ldflags "$(LDFLAGS)" .
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build $(BUILD_FLAGS) -o build/osx/$(BINARY) -ldflags "$(LDFLAGS)" .
 
 build.docker: scm-source.json build.linux
 	docker build --rm -t "$(IMAGE):$(TAG)" -f $(DOCKERFILE) .
