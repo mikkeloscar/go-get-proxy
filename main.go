@@ -26,8 +26,13 @@ var (
 
 func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-	pkg := fmt.Sprintf(pkgFmt, strings.TrimPrefix(path, "/"))
-	fmt.Fprint(w, fmt.Sprintf(body, host, path, vcs, pkg))
+	pkg := strings.TrimPrefix(path, "/")
+	pkgParts := strings.Split(pkg, "/")
+	if len(pkgParts) >= 2 {
+		pkg = strings.Join(pkgParts[:2], "/")
+	}
+	repoRoot := fmt.Sprintf(pkgFmt, pkg)
+	fmt.Fprint(w, fmt.Sprintf(body, host, path, vcs, repoRoot))
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
