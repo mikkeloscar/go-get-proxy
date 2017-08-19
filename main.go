@@ -11,7 +11,7 @@ import (
 const body = `
 <html>
   <head>
-    <meta name="go-import" content="%s%s %s %s">
+    <meta name="go-import" content="%s/%s %s %s">
   </head>
   <body></body>
 </html>
@@ -25,14 +25,13 @@ var (
 )
 
 func proxyHandler(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
-	pkg := strings.TrimPrefix(path, "/")
-	pkgParts := strings.Split(pkg, "/")
+	pkgRoot := strings.TrimPrefix(r.URL.Path, "/")
+	pkgParts := strings.Split(pkgRoot, "/")
 	if len(pkgParts) >= 2 {
-		pkg = strings.Join(pkgParts[:2], "/")
+		pkgRoot = strings.Join(pkgParts[:2], "/")
 	}
-	repoRoot := fmt.Sprintf(pkgFmt, pkg)
-	fmt.Fprint(w, fmt.Sprintf(body, host, path, vcs, repoRoot))
+	repoRoot := fmt.Sprintf(pkgFmt, pkgRoot)
+	fmt.Fprint(w, fmt.Sprintf(body, host, pkgRoot, vcs, repoRoot))
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
